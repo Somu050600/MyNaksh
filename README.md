@@ -14,14 +14,16 @@ Reanimated 4 · Zustand · Jest + React Native Testing Library
 | `tsc --noEmit` | clean |
 | `eslint .` | clean |
 | Jest (78 tests, 9 suites) | passing |
-| **iOS / Android native build** | not yet verified |
+| **iOS Simulator** (Xcode 26.6, iPhone 17, iOS 26.5, Debug build + Metro) | built and run; exercised: timeline and date separators, card tap → native alert, carousel swipe, 👎 chips, send → sent → typing → AI reply, `/fail` + Retry, long-press → Reply / Copy / Delete (clipboard verified; quote of a deleted message), error and empty states |
+| iOS: not observed | the in-app "Loading conversation…" spinner (covered by a Jest test only) and keyboard avoidance (the simulator ran with a hardware keyboard, so the soft keyboard never appeared) |
+| **Android** | not built or run |
 
 ## Run it
 
 ```bash
 npm install
 
-# Native
+# Native (iOS needs Xcode plus its matching simulator platform: Xcode > Settings > Components)
 cd ios && bundle install && bundle exec pod install && cd ..
 npm run ios        # or: npm run android
 
@@ -178,7 +180,7 @@ export const remedyRecommendation = defineRecommendation<RemedyRecommendation>({
 
 ## Trade-offs (3-hour budget)
 
-- **Native build status.** Not verified at the time of this commit; see Status above.
+- **Native build status.** iOS Simulator only (see Status above); Android is untested.
 - **Reanimated is mocked in Jest.** Tests prove behaviour and state, not animations.
 - **No runtime payload validation.** `defineRecommendation` is a compile-time contract; a malformed
   `meta` from a real backend would reach the card. A schema (e.g. zod) at the API boundary is the fix.
