@@ -1,12 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  TextInput,
-  TextInputKeyPressEvent,
-  View,
-} from 'react-native';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PressableScale } from '../../../shared/ui/PressableScale';
 import { colors, radius, spacing } from '../../../shared/theme';
@@ -35,21 +28,6 @@ export function Composer() {
     setText('');
   };
 
-  // Web only: Enter sends, Shift+Enter inserts a newline.
-  const onKeyPress = (e: TextInputKeyPressEvent) => {
-    if (Platform.OS !== 'web') {
-      return;
-    }
-    const native = e.nativeEvent as unknown as {
-      key: string;
-      shiftKey?: boolean;
-    };
-    if (native.key === 'Enter' && !native.shiftKey) {
-      (e as unknown as { preventDefault?: () => void }).preventDefault?.();
-      submit();
-    }
-  };
-
   return (
     <SafeAreaView edges={['bottom']} style={styles.container}>
       <ReplyPreview />
@@ -61,7 +39,6 @@ export function Composer() {
           style={styles.input}
           value={text}
           onChangeText={setText}
-          onKeyPress={onKeyPress}
           placeholder="Message AI Astrologer"
           placeholderTextColor={colors.textMuted}
           multiline

@@ -11,19 +11,15 @@ Reanimated 4 · Zustand · Jest + React Native Testing Library
 
 | Check | Result |
 | --- | --- |
-| `tsc --noEmit` (app + web entry) | clean |
+| `tsc --noEmit` | clean |
 | `eslint .` | clean |
 | Jest (78 tests, 9 suites) | passing |
-| Web preview (`react-native-web`) driven in a real browser | exercised: timeline and date separators, card tap, 👍/👎 + chips, send → sent → typing → AI reply, `/fail` + Retry, long-press → Reply / Copy / Delete (incl. quote of a deleted message), loading / error / empty states, carousel horizontal scroll (set programmatically; wheel and touch swipes not tried) |
-| **iOS / Android native build** | **not built or run.** The dev machine has no Xcode or Android SDK. Native-only behaviour (Metro + the Reanimated worklet transform, the native clipboard module, `KeyboardAvoidingView`, `Modal`) is unverified on device. |
+| **iOS / Android native build** | not yet verified |
 
 ## Run it
 
 ```bash
 npm install
-
-# Web preview (no Xcode / Android Studio needed): http://localhost:5173
-npm run web
 
 # Native
 cd ios && bundle install && bundle exec pod install && cd ..
@@ -35,15 +31,12 @@ npm run typecheck
 npm run lint
 ```
 
-The web preview is a **dev-only** tool (Vite + `react-native-web`, see `web/`). Metro remains the
-bundler for the real app. The preview renders in a phone-width column.
-
 ### Demo script (≈3 min)
 
 1. **Timeline.** Yesterday/Today separators, a system event, grouped bubbles, an AI message with four
    recommendation cards. Scroll the cards sideways; tap one for an alert.
 2. **Feedback.** 👎 on the AI message expands chips; select a couple. 👍 collapses them.
-3. **Send.** Type a message and press Enter: *Sending…* → *Sent*, then a typing indicator and a mock AI reply.
+3. **Send.** Type a message and tap send: *Sending…* → *Sent*, then a typing indicator and a mock AI reply.
    That reply includes `remedy` and `panchang` cards, which the app has **no definition for**: they render
    through the generic fallback card.
 4. **Failure + Retry.** Send any message containing `/fail`: *Failed to send · Retry*. Retry succeeds.
@@ -71,7 +64,6 @@ src/
     store/                     Zustand store factory + app singleton
     components/                MessageList, MessageRow, messageRegistry, bubbles/, Composer,
                                ReplyPreview, FeedbackBar, ActionSheet, StateViews, DevMenu
-web/                           dev-only Vite preview
 docs/superpowers/              design spec and implementation plan
 ```
 
@@ -186,11 +178,8 @@ export const remedyRecommendation = defineRecommendation<RemedyRecommendation>({
 
 ## Trade-offs (3-hour budget)
 
-- **Native not run.** No Xcode/Android SDK here; the web preview and tests carry the verification. Treat
-  iOS/Android behaviour as unproven until someone runs it. Long-press on web was driven with synthetic
-  held-mouse events, not a physical press.
-- **Reanimated is mocked in Jest.** Tests prove behaviour and state, not animations. Those were checked
-  visually in the browser only.
+- **Native build status.** Not verified at the time of this commit; see Status above.
+- **Reanimated is mocked in Jest.** Tests prove behaviour and state, not animations.
 - **No runtime payload validation.** `defineRecommendation` is a compile-time contract; a malformed
   `meta` from a real backend would reach the card. A schema (e.g. zod) at the API boundary is the fix.
 - **Mock-driven realism.** Timestamps are synthesized in the normalizer (the brief's payload has none); AI
@@ -203,6 +192,3 @@ export const remedyRecommendation = defineRecommendation<RemedyRecommendation>({
   `react-native-gesture-handler`).
 - **Out of scope:** pagination of older history, a "jump to latest" button, unread markers, persistence,
   accessibility beyond roles/labels, dark mode, i18n.
-- **Web preview plumbing.** Vite 8 has no Babel, so `web/vite.config.mts` runs the Reanimated worklet
-  plugin itself, and platform files (`*.web.ts`) are resolved first. It is deliberately isolated from
-  the shipping app.

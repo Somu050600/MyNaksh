@@ -1,5 +1,7 @@
 # AI Conversation Experience — Design
 
+> **Revision:** the dev-only `react-native-web` preview described in this document was later removed; verification moved to the iOS Simulator.
+
 Date: 2026-10-16 · Status: approved by user ("go ahead")
 
 ## Goal

@@ -1,5 +1,7 @@
 # AI Conversation Experience Implementation Plan
 
+> **Revision:** the dev-only `react-native-web` preview described in this document was later removed; verification moved to the iOS Simulator.
+
 > **For agentic workers:** Execute task-by-task (inline). Steps use checkbox syntax. No commits unless the user asks (user instruction); `git init` only.
 
 **Goal:** RN CLI + TS chat screen whose AI messages render extensible recommendation cards, plus production interactions (actions, feedback, composer, load states), previewable on web.
